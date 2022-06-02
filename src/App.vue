@@ -12,45 +12,51 @@
 
     <div class="search-wrapper">
       <div class="search-container">
-        <input class="search" placeholder="Search . . ."/>
+        <input 
+          type="text" 
+          class="search" 
+          placeholder="Search . . ."
+          v-model="query"
+          @keypress="fetchStock"
+          />
       </div>
     </div>
 
     <div class="stock-wrapper">
       <div class="stock-container">
         <div class="stock">
-        
+     
           <div class="stock-row-1">
             <div class="stock-item">
-              <div class="stock-item-label ">Symbol</div>
-              <div class="stock-item-symbol-data stock-item-data">TSLA</div>
+              <div class="stock-item-label">Name</div>
+              <div class="stock-item-symbol-data stock-item-data">{{ stock.symbol }}</div>
             </div>
+
             <div class="stock-item">
               <div class="stock-item-label">Open</div>
-              <div class="stock-item-open-data stock-item-data">$100.00</div>
-
+              <div class="stock-item-open-data stock-item-data">{{ stock.open }}</div>
             </div>
           </div>
 
           <div class="stock-row-2">
             <div class="stock-item">
               <div class="stock-item-label">High</div>
-              <div class="stock-item-open-data stock-item-data">$100.00</div>
+              <div class="stock-item-open-data stock-item-data">{{ stock.high }}</div>
             </div>
             <div class="stock-item">
               <div class="stock-item-label">Low</div>
-              <div class="stock-item-low-data stock-item-data">$100.00</div>
+              <div class="stock-item-low-data stock-item-data">{{ stock.low }}</div>
             </div>
           </div>
 
           <div class="stock-row-3">
             <div class="stock-item">
               <div class="stock-item-label">Close</div>
-              <div class="stock-item-close-data stock-item-data">$100.00</div>
+              <div class="stock-item-close-data stock-item-data">{{ stock.close }}</div>
             </div>
             <div class="stock-item">
               <div class="stock-item-label">Volume</div>
-              <div class="stock-item-volume-data stock-item-data">$100.00</div>
+              <div class="stock-item-volume-data stock-item-data">{{ stock.volume }}</div>
             </div>
           </div>
           
@@ -74,11 +80,33 @@
 </template>
 
 <script>
-
 export default {
-  name: 'App',
+  name: 'app',
+  data () {
+    return {
+      url_base: 'https://api.polygon.io/v1/open-close/',
+      query: '',
+      range: '/2020-10-14',
+      adjusted: '?adjusted=true',
+      api_base: '&apiKey=',
+      api_key: 'ocfCoPkAjhBpbUemNDwzIWe7hL7ipooS',
+      stock: {}
+    }
+  },
+  methods: {
+    fetchStock (e) {
+      if (e.key == "Enter") {
+        fetch(`${this.url_base}${this.query.toUpperCase()}${this.range}${this.adjusted}${this.api_base}${this.api_key}`)
+          .then(res => {
+            return res.json();
+          }).then(this.setresult);
+      }
+    },
+    setresult (result) {
+      this.stock = result;
+    },
   }
-
+}
 </script>
 
 <style>
@@ -117,10 +145,6 @@ main {
   border-radius: 1em;
 }
 
-.header-wrapper {
-
-}
-
 .header-container {
   width: 100%;
   border-radius: 1em;
@@ -139,10 +163,6 @@ main {
 
   padding: .5em;
   text-align: center;
-}
-
-.search-wrapper {
-
 }
 
 .search-container {
@@ -175,10 +195,6 @@ main {
   font-family: 'Oswald', sans-serif;
   font-weight: 400;
   text-transform: uppercase;
-}
-
-.stock-wrapper {
-
 }
 
 .stock {
@@ -246,30 +262,6 @@ main {
   padding-left: .5em;
 
   text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
-
-}
-
-.stock-item-symbol-data {
-
-}
-
-.stock-item-open-data {
-
-}
-
-.stock-item-high-data {
-
-}
-
-.stock-item-low-data {
-
-}
-
-.stock-item-close-data {
-
-}
-
-.stock-item-volume-data {
 
 }
 
