@@ -15,11 +15,26 @@
         <input 
           type="text" 
           class="search" 
-          placeholder="Search . . ."
-          v-model="query"
+          placeholder="Search Stock Ticker . . ."
+          v-model="ticker"
           @keypress="fetchStock"
           />
       </div>
+      
+    </div>
+
+
+    <div class="date-wrapper">
+      <div class="date-container">
+        <input 
+          type="text" 
+          class="date" 
+          placeholder="YYYY-MM-DD . . ."
+          v-model="date"
+          @keypress="fetchStock"
+          />
+      </div>
+      
     </div>
 
     <div class="stock-wrapper">
@@ -85,8 +100,8 @@ export default {
   data () {
     return {
       url_base: 'https://api.polygon.io/v1/open-close/',
-      query: '',
-      range: '/2020-10-14',
+      ticker: '',
+      date: '',
       adjusted: '?adjusted=true',
       api_base: '&apiKey=',
       api_key: 'ocfCoPkAjhBpbUemNDwzIWe7hL7ipooS',
@@ -96,7 +111,7 @@ export default {
   methods: {
     fetchStock (e) {
       if (e.key == "Enter") {
-        fetch(`${this.url_base}${this.query.toUpperCase()}${this.range}${this.adjusted}${this.api_base}${this.api_key}`)
+        fetch(`${this.url_base}${this.ticker.toUpperCase()}${'/' + this.date}${this.adjusted}${this.api_base}${this.api_key}`)
           .then(res => {
             return res.json();
           }).then(this.setresult);
@@ -104,7 +119,7 @@ export default {
     },
     setresult (result) {
       this.stock = result;
-    },
+    }
   }
 }
 </script>
@@ -165,6 +180,20 @@ main {
   text-align: center;
 }
 
+.not_found {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 200;
+
+  color: rgba(255, 94, 87, 1.0);
+  font-size: 1.25em;
+  text-transform: uppercase;
+
+  text-shadow: 5px 5px 0px rgba(255, 94, 87, 0.2);
+
+  padding: .5em;
+  text-align: center;
+}
+
 .search-container {
   width: 100%;
   margin-top: 1em;
@@ -188,6 +217,30 @@ main {
   width: 100%;
 
   padding: 1em;
+}
+
+.date-container {
+  width: 100%;
+  margin-top: 1em;
+}
+
+.date {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  color: #0be881;
+  font-size: 1em;
+  text-transform: uppercase;
+
+  border-radius: 0.75em;
+  background-color: rgba(255, 255, 255, 0);
+  
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(120, 224, 143,1.0);
+
+  width: 100%;
+
+  padding: 0.5em 1em 0.5em 1em ;
 }
 
 ::placeholder {
